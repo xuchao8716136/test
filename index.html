@@ -160,9 +160,75 @@
     <br>})();
     </code></p>
 <h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>闭包</h3>
 
-<p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
+<p><br>/ 所谓的闭包就是优先等级的复写 overwriter
+    <br>// 因为全局变量被引用了，但是全局变量被局部变量重新附值了，造成了
+    <br>// 局部的函数不会收到外部的函数影响，除非专门调用，因此形成闭包
+
+    <br>var x = 10;
+    <br>// global function
+    <br>function foo() {
+    <br>console.log(x);
+    <br>}
+    <br>(function (funArg) {
+    <br>// local "x"
+    <br>var x = 20;
+    <br>// there is no ambiguity,
+    <br>// because we use global "x",
+    <br>// which was statically saved in
+    <br>// [[Scope]] of the "foo" function,
+    <br>// but not the "x" of the caller's scope,
+    <br>// which activates the "funArg"
+    <br>funArg(); // 10, but not 20
+    <br>})(foo);
+    <br>// 最后就是传递foo的值
+    <br>// pass "down" foo as a "funarg"
+
+    <br>// 变量在匿名函数之中是无法被调用的，因此形成闭包。
+    <br>function baz() {
+    <br>var x = 1;
+    <br>return {
+    <br>foo: function foo() { return ++x; },
+    <br>bar: function bar() { return --x; }
+    <br>};
+    <br>}
+    <br>var closures = baz();
+    <br>console.log(
+    <br>closures.foo(), // 2
+    <br>closures.bar() // 1
+    <br>);
+
+    <br>// 在这个函数之中，变量被复写了，原本变量是1 先执行foo 那么x被复写为 1++ = 2 这个时候
+    <br>// x的值被存储在x的位置，即两个函数的父级的位置，那么x被复写为 2-- = 1
+
+    <br>var data = [];
+    <br>for (var k = 0; k < 3; k++) {
+    <br>data[k] = function () {
+    <br>alert(k);
+    <br>};
+    <br>}
+    <br>data[0](); // 3, but not 0
+    <br>data[1](); // 3, but not 1
+    <br>data[2](); // 3, but not 2
+
+    <br>// 在这个函数之中for循环之中是一个闭包，他本身来说也是一个函数，或者说是方法
+    <br>// 因此会在for之中循环完毕而不接受data的赋值，作用链在这里的需要使用额外的函数
+
+    <br>var data = [];
+    <br>for (var k = 0; k < 3; k++) {
+    <br>data[k] = (function (x) {
+    <br>return function () {
+    <br>alert(x);
+    <br>};
+    <br>})(k); // 传递k的值在这里作用链可以传递值，是因为在这里还没有进入循环数组
+
+    <br>}
+    <br>// now it is correct
+    <br>data[0](); // 0
+    <br>data[1](); // 1
+    <br>data[2](); // 2
+</p>
       </section>
 
       <footer>
