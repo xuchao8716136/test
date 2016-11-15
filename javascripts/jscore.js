@@ -70,7 +70,7 @@ var bar = new Bar('John');
 console.log(bar.getName());
 
 // 作用域链
-
+3
 var x = 10;
 (function () {
     var y = 20;
