@@ -70,7 +70,7 @@ var bar = new Bar('John');
 console.log(bar.getName());
 
 // 作用域链
-3
+
 var x = 10;
 (function () {
     var y = 20;
@@ -78,5 +78,39 @@ var x = 10;
         var z = 30;
         console.log(x + y + z);
     })()
+})();
+
+// 主要是指的是函数和变量之间的调用，可能有点面向过程的意思
+// 先找原型链_proto_然后再找作用域链_parent_？
+Object.prototype.x = 10;
+var w = 20;
+var y = 30;
+// in SpiderMonkey global object
+// i.e. variable object of the global
+// context inherits from "Object.prototype",
+// so we may refer "not defined global
+// variable x", which is found in
+// the prototype chain
+console.log(x); // 10
+// 匿名函数
+(function foo() {
+// "foo" local variables
+    var w = 40;
+    var x = 100;
+// "x" is found in the
+// "Object.prototype", because
+// {z: 50} inherits from it
+    with ({z: 50}) {
+        console.log(w, x, y , z); // 40, 10, 30, 50
+    }
+// after "with" object is removed
+// from the scope chain, "x" is
+// again found in the AO of "foo" context;
+// variable "w" is also local
+    console.log(x, w); // 100, 40
+// and that's how we may refer
+// shadowed global "w" variable in
+// the browser host environment
+    console.log(window.w); // 20
 })();
 
