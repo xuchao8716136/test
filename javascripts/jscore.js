@@ -221,3 +221,35 @@ bar.baz(); // bar
 var otherFoo = bar.baz;
 otherFoo(); // again global object
 // 这一大段我不知道是什么意思
+
+
+// javascript 在es6 中添加了类， 所以不能说没有类
+
+let person = {
+    getName:function () {
+        return this._getFirst()+this._getLast();
+    },
+    _getfirst:function (x) {
+        return this.x;
+    },
+    _getLast:function (x) {
+        return this.x;
+    }
+};
+
+class Preson {
+      name(_name){
+       this._name = name
+      }
+      age(){}
+}
+
+// 编写API文档
+
+
+/**
+ *翻转一个字符
+ *
+ * @param {string}
+ * @return {string}
+ */
